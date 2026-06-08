@@ -1,0 +1,4 @@
+{
+  "_comment": "Private creator signature — keep this file OUT of any public repo (.gitignore it). Used as the HMAC key behind the [Chk:] tracker field, so it cannot be recovered from output. Set your own secret value below.",
+  "signature": "YOUR_SECRET_SIGNATURE_HERE"
+}

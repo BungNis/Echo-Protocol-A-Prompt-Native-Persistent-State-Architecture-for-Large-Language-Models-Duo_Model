@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Synapse Protocol V1 — Loading</title>
+<link rel="stylesheet" href="/static/css/base.css">
+<style>
+  body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .loader { text-align:center; width:420px; }
+  .logo { font-size:1.1rem; font-weight:700; letter-spacing:.2em; color:var(--accent); margin-bottom:.25rem; }
+  .sub  { font-size:.75rem; color:var(--text2); letter-spacing:.1em; margin-bottom:2rem; }
+  .checklist { list-style:none; padding:0; margin:0 0 1.75rem 0; text-align:left; }
+  .checklist li { display:flex; align-items:center; gap:.75rem; padding:.4rem 0;
+    font-size:.85rem; color:var(--text2); transition:color .3s; }
+  .checklist li.done { color:var(--text); }
+  .checklist li.fail { color:#f87171; }
+  .icon { width:18px; text-align:center; font-size:.9rem; }
+  .spinner { display:inline-block; width:14px; height:14px; border:2px solid var(--border);
+    border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .progress-wrap { background:var(--bg3); border-radius:99px; height:6px; overflow:hidden; margin-bottom:1.5rem; }
+  .progress-bar  { height:100%; background:var(--accent); border-radius:99px;
+    width:0%; transition:width .5s ease; }
+  .info-row { display:flex; justify-content:space-between; font-size:.75rem; color:var(--text2); margin-bottom:1.5rem; }
+  .info-row span { background:var(--bg2); border:1px solid var(--border); border-radius:4px; padding:.2rem .5rem; }
+  .ready-msg { font-size:.9rem; color:#4ade80; animation:pulse 1.2s ease-in-out infinite; display:none; }
+  @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+</style>
+</head>
+<body>
+<div class="loader">
+  <div class="logo">ECHO PROTOCOL V8</div>
+  <div class="sub">Dual-Core World Engine</div>
+
+  <ul class="checklist" id="checklist">
+    <li id="step-config">   <span class="icon">○</span> Loading config</li>
+    <li id="step-providers"><span class="icon">○</span> Detecting providers</li>
+    <li id="step-prompts">  <span class="icon">○</span> Loading prompts</li>
+    <li id="step-auditor">  <span class="icon">○</span> Connecting to Auditor  ({{ sec.name }})</li>
+    <li id="step-narrator"> <span class="icon">○</span> Connecting to Narrator ({{ pri.name }})</li>
+    <li id="step-database"> <span class="icon">○</span> Loading database</li>
+  </ul>
+
+  <div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+  <div class="info-row" id="info-row" style="visibility:hidden">
+    <span id="info-pri">Narrator: —</span>
+    <span id="info-sec">Auditor: —</span>
+  </div>
+
+  <div class="ready-msg" id="ready-msg">✓ All systems operational — entering world...</div>
+</div>
+
+<script src="/static/js/loading.js"></script>
+</body>
+</html>

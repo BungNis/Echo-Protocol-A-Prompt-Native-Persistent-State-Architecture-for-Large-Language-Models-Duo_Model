@@ -1,0 +1,20 @@
+{
+  "primary":   { "url": "https://api.deepseek.com/v1/chat/completions", "api_key": "", "model": "deepseek-chat" },
+  "secondary": { "url": "https://api.deepseek.com/v1/chat/completions", "api_key": "", "model": "deepseek-chat" },
+  "db_path": "",
+  "history_turns": 5,
+  "auto_save": { "enabled": false, "every_turns": 5, "keep_files": 5 },
+
+  "ingame_date": false,
+  "web_lookup": false,
+
+  "narrator_audit": false,
+  "audit_notify": false,
+  "recall": true,
+
+  "anti_repeat": false,
+  "narration_lang": "",
+
+  "chrysalis": false,
+  "chrysalis_semantic": false
+}

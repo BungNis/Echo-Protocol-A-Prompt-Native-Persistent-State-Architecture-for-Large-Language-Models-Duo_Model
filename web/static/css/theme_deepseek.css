@@ -1,0 +1,12 @@
+/* DeepSeek — Dark Navy + Blue */
+:root {
+  --bg:         #0a0e1a;
+  --bg2:        #111827;
+  --bg3:        #1c2333;
+  --accent:     #3b82f6;
+  --text:       #e2e8f0;
+  --text2:      #64748b;
+  --border:     #1e293b;
+  --bubble-ai:  #131d30;
+  --bubble-user:#1e3a5f;
+}

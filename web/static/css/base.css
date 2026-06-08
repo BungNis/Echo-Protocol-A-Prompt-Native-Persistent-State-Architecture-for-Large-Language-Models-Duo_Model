@@ -1,0 +1,35 @@
+/* Synapse Protocol V1 — Base CSS (Default: DeepSeek theme) */
+:root {
+  --bg:          #0d1117;
+  --bg2:         #161b22;
+  --bg3:         #21262d;
+  --accent:      #3b82f6;
+  --accent2:     #1d4ed8;
+  --text:        #e6edf3;
+  --text2:       #7d8590;
+  --border:      #30363d;
+  --radius:      10px;
+  --font:        'Segoe UI', system-ui, -apple-system, sans-serif;
+  --bubble-ai:   #1c2333;
+  --bubble-user: #1a3358;
+  --shadow:      0 4px 24px rgba(0,0,0,.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
+
+html { font-size: 16px; }
+
+body {
+  background:  var(--bg);
+  color:       var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }

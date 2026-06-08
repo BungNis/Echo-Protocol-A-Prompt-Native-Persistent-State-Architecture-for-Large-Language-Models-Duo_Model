@@ -1,0 +1,18 @@
+# Secrets — NEVER commit
+Config/Settings.json
+Config/Keys/
+Config/Signature.json
+
+# Environment
+.venv/
+__pycache__/
+*.pyc
+
+# Playthrough / runtime data
+Database/Campaigns/*
+!Database/Campaigns/.gitkeep
+
+# Local backups & test data
+Backups/
+tests/_prefix_archive/
+tests/soak_en_data.jsonl

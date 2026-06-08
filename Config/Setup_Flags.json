@@ -1,0 +1,10 @@
+{
+  "world_created": false,
+  "pc_created": false,
+  "start_created": false,
+  "game_started": false,
+  "game_paused": false,
+  "world_data": {},
+  "pc_data": {},
+  "start_data": {}
+}

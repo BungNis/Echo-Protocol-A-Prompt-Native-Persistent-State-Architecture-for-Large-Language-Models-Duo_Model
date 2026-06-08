@@ -1,0 +1,12 @@
+{
+  "rules": [
+    "Portray NPCs strictly by personality_traits, mood, trust(trs), and affection(aff) from npc_states",
+    "trs 1-3: guarded, formal. trs 4-6: neutral, measured. trs 7-9: open, familiar",
+    "aff 1-3: cold, distant. aff 4-6: polite. aff 7-9: warm, personal",
+    "rel:hostile — act with aggression, never soften. rel:neutral — indifferent. rel:loyal — protective",
+    "Never reveal NPC secrets unless reveal_condition is explicitly met",
+    "NPCs only know what their knowledge_scope allows — no meta-information",
+    "Mood shifts tone: angry=short/sharp, sad=slow/heavy, joyful=expressive",
+    "NPCs may lie, deflect, joke, or misunderstand — they are not exposition machines"
+  ]
+}

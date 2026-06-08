@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synapse Protocol V1 — Settings</title>
+<link rel="stylesheet" href="/static/css/base.css">
+<style>
+  body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:2rem; }
+  .card { background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);
+    padding:2rem; width:100%; max-width:600px; }
+  .card-title { font-size:1.1rem; font-weight:700; color:var(--accent); margin-bottom:2rem; }
+
+  /* Slot */
+  .slot { margin-bottom:2rem; }
+  .slot-title { font-size:.68rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--text2); margin-bottom:.9rem; }
+
+  /* Mode Cards */
+  .mode-cards { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin-bottom:1rem; }
+  .mode-card { border:2px solid var(--border); border-radius:10px; padding:.9rem 1rem;
+    cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:.75rem;
+    background:var(--bg3); }
+  .mode-card:hover { border-color:var(--text2); }
+  .mode-card.active { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, var(--bg3)); }
+  .mode-icon { font-size:1.4rem; line-height:1; }
+  .mode-info { display:flex; flex-direction:column; gap:.1rem; }
+  .mode-name { font-size:.88rem; font-weight:600; color:var(--text); }
+  .mode-desc { font-size:.72rem; color:var(--text2); }
+  .mode-card.active .mode-name { color:var(--accent); }
+
+  /* Fields */
+  .fields { display:none; flex-direction:column; gap:.7rem; }
+  .fields.show { display:flex; }
+  .field { display:flex; flex-direction:column; gap:.3rem; }
+  .field-row { display:grid; grid-template-columns:1fr 1fr; gap:.7rem; }
+  label { font-size:.78rem; color:var(--text2); }
+  .hint { font-size:.7rem; opacity:.6; }
+
+  input[type=text], input[type=password], input[type=number], select {
+    background:var(--bg); border:1px solid var(--border); color:var(--text);
+    border-radius:7px; padding:.55rem .75rem; font-size:.88rem; font-family:var(--font);
+    width:100%; box-sizing:border-box; transition:border-color .2s; }
+  input:focus, select:focus { outline:none; border-color:var(--accent); }
+  input:disabled { opacity:.35; border-style:dashed; cursor:not-allowed; }
+  select { cursor:pointer; }
+
+  .url-row { position:relative; }
+  .url-row input { padding-right:4rem; }
+  .auto-tag { position:absolute; right:.6rem; top:50%; transform:translateY(-50%);
+    font-size:.65rem; color:var(--text2); background:var(--bg2); padding:.15rem .4rem;
+    border-radius:3px; border:1px solid var(--border); pointer-events:none; }
+
+  hr { border:none; border-top:1px solid var(--border); margin:1.75rem 0; }
+
+  .path-row { display:flex; gap:.5rem; }
+  .path-row input { flex:1; }
+  .btn-sm { background:var(--bg3); border:1px solid var(--border); color:var(--text2);
+    border-radius:7px; padding:.55rem .9rem; cursor:pointer; font-size:.8rem; white-space:nowrap; }
+  .btn-sm:hover { border-color:var(--accent); color:var(--text); }
+
+  /* Key Selector */
+  .key-sel-row { display:flex; gap:.5rem; align-items:center; margin-bottom:.65rem; }
+  .key-sel-row select { flex:1; font-size:.82rem; }
+  .btn-icon-sm { background:var(--bg3); border:1px solid var(--border); color:var(--text2);
+    border-radius:6px; padding:.4rem .6rem; cursor:pointer; font-size:.85rem; }
+  .btn-icon-sm:hover { border-color:var(--accent); color:var(--text); }
+  .btn-icon-sm:disabled { opacity:.35; cursor:not-allowed; }
+
+  /* Auto-Save */
+  .autosave-row { display:flex; align-items:center; gap:.75rem; flex-wrap:wrap;
+    background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:.75rem 1rem; }
+  .autosave-row input[type=checkbox] { width:16px; height:16px; accent-color:var(--accent); cursor:pointer; }
+  .as-label { font-size:.88rem; color:var(--text); cursor:pointer; }
+  .as-sep { font-size:.82rem; color:var(--text2); }
+  .as-num { width:60px !important; text-align:center; }
+
+  /* Campaigns */
+  .camp-list { background:var(--bg); border:1px solid var(--border); border-radius:8px;
+    max-height:220px; overflow-y:auto; }
+  .camp-item { display:flex; align-items:center; gap:.75rem; padding:.65rem 1rem;
+    border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
+  .camp-item:last-child { border-bottom:none; }
+  .camp-item:hover { background:var(--bg2); }
+  .camp-item.selected { background:color-mix(in srgb, var(--accent) 12%, var(--bg)); }
+  .camp-item input[type=radio] { accent-color:var(--accent); cursor:pointer; flex-shrink:0; }
+  .camp-name { flex:1; font-size:.88rem; color:var(--text); }
+  .camp-meta { font-size:.72rem; color:var(--text2); white-space:nowrap; }
+  .camp-empty { padding:1.25rem; text-align:center; font-size:.82rem; color:var(--text2); }
+  .camp-actions { display:flex; gap:.5rem; margin-top:.75rem; }
+
+  /* DB Usage */
+  .db-usage { background:var(--bg); border:1px solid var(--border); border-radius:8px;
+    padding:.65rem 1rem; font-size:.78rem; color:var(--text2);
+    display:flex; gap:1.25rem; flex-wrap:wrap; margin-top:1rem; }
+  .db-usage b { color:var(--text); font-weight:600; }
+
+  .actions { display:flex; align-items:center; gap:.75rem; margin-top:1.75rem; }
+  .status { flex:1; font-size:.78rem; }
+  .status.ok  { color:#4ade80; }
+  .status.err { color:#f87171; }
+  .btn { padding:.65rem 1.5rem; border-radius:8px; font-size:.88rem; font-weight:600;
+    cursor:pointer; border:none; }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-primary:hover { opacity:.9; }
+  .btn-ghost { background:var(--bg3); color:var(--text2); border:1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-title">⚙ Synapse Protocol V1 — Settings</div>
+
+  <!-- ── PRIMARY ─────────────────────────────────────────────────── -->
+  <div class="slot">
+    <div class="slot-title">Primary Model — Narrator (Creative)</div>
+
+    <div class="mode-cards">
+      <div class="mode-card active" id="pri-card-key" onclick="setMode('pri','key')">
+        <span class="mode-icon">🔑</span>
+        <div class="mode-info">
+          <span class="mode-name">API Key</span>
+          <span class="mode-desc">Cloud provider</span>
+        </div>
+      </div>
+      <div class="mode-card" id="pri-card-url" onclick="setMode('pri','url')">
+        <span class="mode-icon">🌐</span>
+        <div class="mode-info">
+          <span class="mode-name">Custom URL</span>
+          <span class="mode-desc">Local or custom endpoint</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key vault selector — always visible -->
+    <div class="key-sel-row">
+      <select id="pri-vault" onchange="onVaultSelect('pri', this.value)">
+        <option value="">📂 Load saved key…</option>
+      </select>
+      <button class="btn-icon-sm" onclick="saveKey('pri')" title="Save">💾</button>
+      <button class="btn-icon-sm" id="pri-vault-ren" onclick="renameKey('pri')" disabled title="Rename">🖊</button>
+      <button class="btn-icon-sm" id="pri-vault-del" onclick="deleteKey('pri')" disabled title="Delete">🗑</button>
+    </div>
+
+    <!-- API Key fields -->
+    <div class="fields show" id="pri-fields-key">
+      <div class="field-row">
+        <div class="field">
+          <label>API Key</label>
+          <input id="pri-key" type="password" placeholder="sk-...  gsk_...  sk-or-..."
+                 oninput="onKey('pri')">
+        </div>
+        <div class="field">
+          <label>Provider</label>
+          <select id="pri-prov" onchange="onProv('pri')">
+            <option value="">— select —</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="openai">OpenAI</option>
+            <option value="groq">Groq</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="mistral">Mistral</option>
+            <option value="together">Together AI</option>
+          </select>
+        </div>
+      </div>
+      <div class="field url-row">
+        <label>URL <span class="hint">— auto-filled, read-only</span></label>
+        <input id="pri-url-auto" type="text" disabled placeholder="Select provider above">
+        <span class="auto-tag">auto</span>
+      </div>
+      <div class="field">
+        <label>Model override <span class="hint">(optional)</span></label>
+        <input id="pri-model-k" type="text" placeholder="Leave blank for default">
+      </div>
+    </div>
+
+    <!-- URL fields -->
+    <div class="fields" id="pri-fields-url">
+      <div class="field">
+        <label>Endpoint URL</label>
+        <input id="pri-url-c" type="text" placeholder="https://api.deepseek.com/v1/chat/completions">
+      </div>
+      <div class="field">
+        <label>API Key <span class="hint">(optional — leave blank for local)</span></label>
+        <input id="pri-key-c" type="password" placeholder="sk-... or blank">
+      </div>
+      <div class="field">
+        <label>Model override <span class="hint">(optional)</span></label>
+        <input id="pri-model-u" type="text" placeholder="e.g. deepseek-chat">
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── SECONDARY ───────────────────────────────────────────────── -->
+  <div class="slot">
+    <div class="slot-title">Secondary Model — Auditor (Logic)</div>
+
+    <div class="mode-cards">
+      <div class="mode-card active" id="sec-card-key" onclick="setMode('sec','key')">
+        <span class="mode-icon">🔑</span>
+        <div class="mode-info">
+          <span class="mode-name">API Key</span>
+          <span class="mode-desc">Cloud provider</span>
+        </div>
+      </div>
+      <div class="mode-card" id="sec-card-url" onclick="setMode('sec','url')">
+        <span class="mode-icon">🌐</span>
+        <div class="mode-info">
+          <span class="mode-name">Custom URL</span>
+          <span class="mode-desc">Local or custom endpoint</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key vault selector — always visible -->
+    <div class="key-sel-row">
+      <select id="sec-vault" onchange="onVaultSelect('sec', this.value)">
+        <option value="">📂 Load saved key…</option>
+      </select>
+      <button class="btn-icon-sm" onclick="saveKey('sec')" title="Save">💾</button>
+      <button class="btn-icon-sm" id="sec-vault-ren" onclick="renameKey('sec')" disabled title="Rename">🖊</button>
+      <button class="btn-icon-sm" id="sec-vault-del" onclick="deleteKey('sec')" disabled title="Delete">🗑</button>
+    </div>
+
+    <div class="fields show" id="sec-fields-key">
+      <div class="field-row">
+        <div class="field">
+          <label>API Key <span class="hint">(blank = Ollama local)</span></label>
+          <input id="sec-key" type="password" placeholder="sk-... or leave blank"
+                 oninput="onKey('sec')">
+        </div>
+        <div class="field">
+          <label>Provider</label>
+          <select id="sec-prov" onchange="onProv('sec')">
+            <option value="">— select —</option>
+            <option value="ollama">Ollama (local)</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="groq">Groq</option>
+            <option value="openai">OpenAI</option>
+            <option value="openrouter">OpenRouter</option>
+            <option value="mistral">Mistral</option>
+          </select>
+        </div>
+      </div>
+      <div class="field url-row">
+        <label>URL <span class="hint">— auto-filled, read-only</span></label>
+        <input id="sec-url-auto" type="text" disabled placeholder="Select provider above">
+        <span class="auto-tag">auto</span>
+      </div>
+      <div class="field">
+        <label>Model override <span class="hint">(optional)</span></label>
+        <input id="sec-model-k" type="text" placeholder="e.g. llama3:8b">
+      </div>
+    </div>
+
+    <div class="fields" id="sec-fields-url">
+      <div class="field">
+        <label>Endpoint URL</label>
+        <input id="sec-url-c" type="text" placeholder="http://localhost:11434/v1/chat/completions">
+      </div>
+      <div class="field">
+        <label>API Key <span class="hint">(optional)</span></label>
+        <input id="sec-key-c" type="password" placeholder="Leave blank for local">
+      </div>
+      <div class="field">
+        <label>Model override <span class="hint">(optional)</span></label>
+        <input id="sec-model-u" type="text" placeholder="e.g. llama3:8b">
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── AUTO-SAVE ─────────────────────────────────────────────────── -->
+  <div class="slot">
+    <div class="slot-title">Auto-Save & History</div>
+    <div class="autosave-row">
+      <input type="checkbox" id="as-enabled"
+             {{ 'checked' if cfg.get('auto_save',{}).get('enabled') else '' }}>
+      <label class="as-label" for="as-enabled">Enable Auto-Save</label>
+      <span class="as-sep" style="margin-left:.5rem">Every</span>
+      <input class="as-num" id="as-turns" type="number" min="1" max="100"
+             value="{{ cfg.get('auto_save',{}).get('every_turns',5) }}">
+      <span class="as-sep">turns</span>
+      <span class="as-sep" style="margin-left:.5rem">Keep</span>
+      <input class="as-num" id="as-keep" type="number" min="1" max="50"
+             value="{{ cfg.get('auto_save',{}).get('keep_files',5) }}">
+      <span class="as-sep">files</span>
+      <span class="as-sep" style="margin-left:1rem">History</span>
+      <input class="as-num" id="hist" type="number" min="1" max="20"
+             value="{{ cfg.get('history_turns',5) }}">
+      <span class="as-sep">turns</span>
+    </div>
+  </div>
+
+  <div class="slot">
+    <div class="slot-title">Game Modes</div>
+    <div class="autosave-row">
+      <input type="checkbox" id="ingame-date"
+             {{ 'checked' if cfg.get('ingame_date') else '' }}>
+      <label class="as-label" for="ingame-date">In-game Date — advancing วัน/เดือน/ปี (history worlds)</label>
+      <span class="as-sep" style="margin-left:1.5rem"></span>
+      <input type="checkbox" id="web-lookup"
+             {{ 'checked' if cfg.get('web_lookup') else '' }}>
+      <label class="as-label" for="web-lookup">Web Lookup — Wikipedia grounding</label>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- ── CAMPAIGNS ─────────────────────────────────────────────────── -->
+  <div class="slot">
+    <div class="slot-title">Campaigns</div>
+    <div class="camp-list" id="camp-list">
+      <div class="camp-empty">Loading campaigns…</div>
+    </div>
+    <div class="camp-actions">
+      <button class="btn-sm" onclick="campCreate()">+ Create New</button>
+      <button class="btn-sm" id="btn-rename" onclick="campRename()" disabled>Rename</button>
+      <button class="btn-sm" id="btn-reset"  onclick="campReset()"
+              disabled style="color:#f97316">Reset</button>
+      <button class="btn-sm" id="btn-delete" onclick="campDelete()"
+              disabled style="color:#f87171">Delete</button>
+    </div>
+
+    <!-- DB Usage -->
+    <div class="db-usage" id="db-usage">
+      <span>—</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <span class="status" id="status"></span>
+    <button class="btn btn-ghost" onclick="location.href='/game'">Cancel</button>
+    <button class="btn btn-primary" id="btn-save" onclick="save()">Start Game →</button>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal-bg" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.6);
+     z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:var(--bg2); border:1px solid var(--border); border-radius:12px;
+       padding:1.5rem; width:320px; display:flex; flex-direction:column; gap:1rem;">
+    <div id="modal-title" style="font-weight:700; font-size:.95rem; color:var(--text)"></div>
+    <input id="modal-input" type="text" style="background:var(--bg); border:1px solid var(--border);
+           color:var(--text); border-radius:7px; padding:.55rem .75rem; font-size:.9rem;
+           font-family:var(--font); width:100%; box-sizing:border-box;"
+           onkeydown="if(event.key==='Enter') modalOK(); if(event.key==='Escape') modalCancel()">
+    <div style="display:flex; justify-content:flex-end; gap:.6rem;">
+      <button onclick="modalCancel()"
+        style="background:var(--bg3); border:1px solid var(--border); color:var(--text2);
+               border-radius:7px; padding:.5rem 1rem; cursor:pointer; font-size:.85rem;">Cancel</button>
+      <button onclick="modalOK()"
+        style="background:var(--accent); border:none; color:#fff;
+               border-radius:7px; padding:.5rem 1rem; cursor:pointer; font-size:.85rem; font-weight:600;">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>const CFG = {{ cfg | tojson }};</script>
+<script src="/static/js/settings.js"></script>
+</body>
+</html>

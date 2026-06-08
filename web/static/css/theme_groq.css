@@ -1,0 +1,12 @@
+/* Groq — Near Black + Orange */
+:root {
+  --bg:         #0a0a0a;
+  --bg2:        #141414;
+  --bg3:        #1e1e1e;
+  --accent:     #f97316;
+  --text:       #f5f5f5;
+  --text2:      #6b6b6b;
+  --border:     #2a2a2a;
+  --bubble-ai:  #181818;
+  --bubble-user:#2a1a0a;
+}
